@@ -25,6 +25,12 @@
                 <button type="submit" class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
                     Login
                 </button>
+
+                <div class=" items-center mt-4 ">
+                    <span>Belum punya akun?
+                        <a class=" text-blue-500 hover:text-blue-700" href="{{ route('register') }}">Daftar Disini.</a>
+                    </span>
+                </div>
             </form>
         </div>
     </div>

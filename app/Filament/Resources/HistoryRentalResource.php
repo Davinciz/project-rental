@@ -76,12 +76,17 @@ class HistoryRentalResource extends Resource
                     ->label('End Date')
                     ->date('d-m-Y'),
                 TextColumn::make('total_price')
-                    ->label('Total Price')
-                    ->money('IDR'),
+                ->label('Total Price')
+                ->money('IDR'),
                 TextColumn::make('created_at')
                     ->label('Created At')
                     ->dateTime(),
-                    
+                TextColumn::make('status')->label('Status')->badge()
+                    ->color(fn ($state) => match ($state) {
+                        'disewa' => 'warning',
+                        'dikembalikan' => 'success',
+                        'dibatalkan' => 'danger',
+                    }),
             ])
             ->filters([
                 //

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Console extends Model
 {
     protected $table = 'consoles';
-    protected $fillable = ['name', 'description', 'price_console', 'status'];
+    protected $fillable = ['name', 'description', 'price_console', 'status', 'image'];
 
     public function rentals()
     {

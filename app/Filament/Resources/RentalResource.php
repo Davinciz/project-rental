@@ -136,44 +136,97 @@ Forms\Components\Hidden::make('user_id')
                 TextColumn::make('television.model'),
                 TextColumn::make('rent_day'),
                 TextColumn::make('start_date')
-                    ->label('Start Rent')
-                    ->date('d-m-Y'),
+                ->label('Start Rent')
+                ->date('d-m-Y'),
                 TextColumn::make('end_date')
-                    ->label('End Rent')
-                    ->date('d-m-Y'),
+                ->label('End Rent')
+                ->date('d-m-Y'),
                 TextColumn::make('total_price')
                 ->money('IDR', true),
+                TextColumn::make('status')->label('Status')->badge()
+                ->color(fn ($state) => match ($state) {
+                    'pending' => 'warning',
+                    'accepted' => 'success',
+                    'canceled' => 'danger',
+                }),
             ])
             ->filters([
                 //
             ])
+            
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\Action::make('accept')
+                // Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('Accepted')
+                ->label('Accept')
+                ->color('success')
+                ->icon('heroicon-o-check-circle')
+                ->visible(fn ($record) => $record->status === 'pending') // Hanya muncul jika Pending
+                ->requiresConfirmation()
+                ->action(fn (Rental $record) => self::updateStatus($record, 'accepted')),
+
+            // Tombol Cancel
+                Tables\Actions\Action::make('Canceled')
+                ->label('Cancel')
+                ->color('danger')
+                ->icon('heroicon-o-x-circle')
+                ->visible(fn ($record) => $record->status === 'pending') // Hanya muncul jika Pending
+                ->requiresConfirmation()
+                ->action(function (Rental $record) {
+                    // Kembalikan status console menjadi available jika ada
+                    if ($record->console) {
+                        $record->console->update(['status' => 'available']);
+                    }
+                    
+                    if ($record->history_rental) {
+                        $record->history_rental->update(['status' => 'dibatalkan']);
+                    }
+
+                    // Kembalikan status television menjadi available jika ada
+                    if ($record->television) {
+                        $record->television->update(['status_television' => 'available']);
+                    }
+
+                    // Hapus data rental
+                    $record->delete();
+
+                    // Kirim notifikasi sukses
+                    Notification::make()
+                        ->title('Rental Dibatalkan')
+                        ->body('Rental telah berhasil dibatalkan dan status barang dikembalikan.')
+                        ->success()
+                        ->send();
+                }),
+
+
+            // Tombol Return
+            Tables\Actions\Action::make('return')
                 ->label('Return')
                 ->requiresConfirmation()
                 ->color('success')
-                ->sendSuccessNotification(
-                    )
+                ->icon('heroicon-o-arrow-path')
+                ->visible(fn ($record) => $record->status === 'accepted') // Hanya muncul jika Accepted
                 ->action(function (Rental $record) {
                     if ($record->console) {
                         $record->console->update(['status' => 'available']);
                     }
+
+                    if ($record->history_rental) {  
+                        $record->history_rental->update(['status' => 'dikembalikan']);
+                    }
+
                     if ($record->television) {
                         $record->television->update(['status_television' => 'available']);
                     }
-                    // Hapus data rental
+                    // Hapus data rental setelah return
                     $record->delete();
 
-                Notification::make()
-                ->title('Thank You')
-                ->body('Thank you for returning.')
-                ->success()
-                ->send();
+                    Notification::make()
+                        ->title('Rental Dikembalikan')
+                        ->success()
+                        ->send();
+                    }),
                 
-                }),
-                
-                ])
+            ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
@@ -194,14 +247,27 @@ Forms\Components\Hidden::make('user_id')
 
         return $query;
     }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
     
+        private static function updateStatus(Rental $rental, string $status)
+    {
+        // Update status rental
+        $rental->update(['status' => $status]);
+
+        // Update status barang (console & televisi) mengikuti rental
+        if ($rental->console_id) {
+            $rental->console()->update(['status' => $status === 'accepted' ? 'not_available' : 'available']);
+        }
+
+        if ($rental->television_id) {
+            $rental->television()->update(['status_television' => $status === 'accepted' ? 'not_available' : 'available']);
+        }
+
+        Notification::make()
+            ->title('Rental ' . ucfirst($status))
+            ->body('Rental has been ' . $status . '.')
+            ->success()
+            ->send();
+    }
 
     public static function getPages(): array
     {

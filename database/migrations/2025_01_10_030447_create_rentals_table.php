@@ -14,12 +14,15 @@ return new class extends Migration
     {
         Schema::create('rentals', function (Blueprint $table) {
             $table->id();
+            $table->string('user_id');
+            $table->string('code')->unique();
             $table->foreignId('console_id')->constrained()->onDelete('cascade');
-            // $table->foreignId('television_id')->constrained()->onDelete('cascade');
+            $table->foreignId('television_id')->constrained()->onDelete('cascade');
             $table->Integer('rent_day');
             $table->date('start_date');
             $table->date('end_date');
             $table->bigInteger('total_price');
+            $table->enum('status', ['pending', 'accepted', 'canceled'])->default('pending');
             $table->timestamps();
         });
     }

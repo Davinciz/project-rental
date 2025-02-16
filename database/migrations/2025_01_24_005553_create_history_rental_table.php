@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('history_rental', function (Blueprint $table) {
             $table->id(); // Primary key
+            $table->string('code');
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Relasi ke tabel users
             $table->foreignId('rental_id')->nullable()->constrained()->OnDelete('set null');
             $table->foreignId('console_id')->nullable()->constrained()->onDelete('set null'); // Relasi ke tabel console
@@ -20,6 +21,7 @@ return new class extends Migration
             $table->date('start_date'); // Tanggal mulai rental
             $table->date('end_date'); // Tanggal selesai rental
             $table->bigInteger('total_price'); // Total harga rental
+            $table->enum('status', ['disewa', 'dikembalikan', 'dibatalkan'])->default('disewa');
             $table->timestamps(); // created_at dan updated_at
         });
     }

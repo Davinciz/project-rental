@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('role')->default('user');
+        Schema::table('rentals', function (Blueprint $table) {
+            $table->string('user_id')->after('id');
+            $table->enum('status', ['pending', 'accepted', 'canceled'])->default('pending')->after('total_price');
         });
     }
 
@@ -21,8 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('role');
+        Schema::table('rentals', function (Blueprint $table) {
+            $table->dropColumn('user_id');
+            $table->dropColumn('status');
         });
     }
 };

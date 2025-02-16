@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Television extends Model
 {
     protected $table = 'televisions';
-    protected $fillable = ['model', 'price_television', 'status_television'];
+    protected $fillable = ['model', 'price_television', 'status_television', 'image'];
 
     public function rentals()
     {

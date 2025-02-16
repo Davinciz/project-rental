@@ -8,6 +8,7 @@ use App\Models\Television;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -38,7 +39,10 @@ class TelevisionResource extends Resource
                         'available' => 'Available',
                         'not_availaible' => 'Not Available',])
                     ->required(),
-                
+                FileUpload::make('image')
+                    ->image()
+                    ->directory('televisions')
+                    ->nullable(),
             ]);
                     
             

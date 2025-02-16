@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ConsoleResource\Pages;
 use App\Models\Console;
 use Filament\Forms;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -43,6 +44,11 @@ class ConsoleResource extends Resource
                         'available' => 'Available',
                         'not_available' => 'Not Available',])
                     ->required(),
+
+                FileUpload::make('image')
+                    ->image()
+                    ->directory('consoles')
+                    ->nullable(),
             ]);
     }
 
