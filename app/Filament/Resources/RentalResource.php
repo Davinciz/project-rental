@@ -11,6 +11,7 @@ use App\Models\Television;
 use Illuminate\Support\Facades\Auth;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -113,7 +114,7 @@ class RentalResource extends Resource
                         ->prefix('Rp')
                         ->readOnly(),
 
-                TextInput::make('code')
+                Hidden::make('code')
                 ->label('Unique ID')
                 ->disabled()
                 ->dehydrated()
@@ -132,6 +133,9 @@ Forms\Components\Hidden::make('user_id')
                 TextColumn::make('code')
                 ->label('Unique ID')
                 ->searchable(),
+                TextColumn::make('user.name')
+                ->label('Customer')
+                ->searchable(),
                 TextColumn::make('console.name'),
                 TextColumn::make('television.model'),
                 TextColumn::make('rent_day'),
@@ -143,10 +147,14 @@ Forms\Components\Hidden::make('user_id')
                 ->date('d-m-Y'),
                 TextColumn::make('total_price')
                 ->money('IDR', true),
-                TextColumn::make('status')->label('Status')->badge()
+                TextColumn::make('status')->label('Status')
+                ->badge()
+                ->sortable()
+                ->searchable()
                 ->color(fn ($state) => match ($state) {
                     'pending' => 'warning',
-                    'accepted' => 'success',
+                    'accepted' => 'info',
+                    'returned' => 'success',
                     'canceled' => 'danger',
                 }),
             ])
@@ -177,29 +185,23 @@ Forms\Components\Hidden::make('user_id')
                         $record->console->update(['status' => 'available']);
                     }
                     
-                    if ($record->history_rental) {
-                        $record->history_rental->update(['status' => 'dibatalkan']);
-                    }
+                    self::updateStatus($record, 'canceled');
 
                     // Kembalikan status television menjadi available jika ada
                     if ($record->television) {
                         $record->television->update(['status_television' => 'available']);
                     }
 
-                    // Hapus data rental
-                    $record->delete();
-
                     // Kirim notifikasi sukses
                     Notification::make()
                         ->title('Rental Dibatalkan')
-                        ->body('Rental telah berhasil dibatalkan dan status barang dikembalikan.')
                         ->success()
                         ->send();
                 }),
 
 
             // Tombol Return
-            Tables\Actions\Action::make('return')
+            Tables\Actions\Action::make('returned')
                 ->label('Return')
                 ->requiresConfirmation()
                 ->color('success')
@@ -210,15 +212,11 @@ Forms\Components\Hidden::make('user_id')
                         $record->console->update(['status' => 'available']);
                     }
 
-                    if ($record->history_rental) {  
-                        $record->history_rental->update(['status' => 'dikembalikan']);
-                    }
-
                     if ($record->television) {
                         $record->television->update(['status_television' => 'available']);
                     }
-                    // Hapus data rental setelah return
-                    $record->delete();
+                    
+                    self::updateStatus($record, 'returned');
 
                     Notification::make()
                         ->title('Rental Dikembalikan')

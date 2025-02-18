@@ -17,8 +17,5 @@
             <p>
                 Nomor : {{ Auth::check() ? Auth::user()->phone : 'Guest' }}
             </p>
-            <p>
-                Password : ********
-            </p>
         </div>
     </div>

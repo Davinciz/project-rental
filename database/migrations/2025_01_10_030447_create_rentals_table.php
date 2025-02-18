@@ -22,7 +22,7 @@ return new class extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->bigInteger('total_price');
-            $table->enum('status', ['pending', 'accepted', 'canceled'])->default('pending');
+            $table->enum('status', ['pending', 'accepted', 'canceled', 'returned'])->default('pending');
             $table->timestamps();
         });
     }

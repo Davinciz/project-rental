@@ -2,7 +2,7 @@
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
     <!-- Bagian Form Rental -->
-    <div class="bg-white p-6 rounded-lg shadow-md lg:col-span-2">
+    <div class="bg-white mt-4 p-6 rounded-lg shadow-md lg:col-span-2">
         <h2 class="text-lg font-semibold mb-4">Rental</h2>
         <form method="POST" id="rentalForm" action="{{ route('rental.store') }}" class="space-y-4">
             @csrf
@@ -34,7 +34,7 @@
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-gray-700">Jumlah hari</label>
-                    <input type="number" id="rent_day" name="rent_day" value="1" min="1"
+                    <input type="number" id="rent_day" name="rent_day" value="1" min="1" max="3"
                         class="w-full p-2 border border-gray-300 rounded-md bg-gray-50">
                 </div>
                 <div>
@@ -56,7 +56,7 @@
     </div>
 
     <!-- Bagian Detail Rental -->
-    <aside class="bg-white p-6 rounded-lg shadow-md h-fit">
+    <aside class="bg-white p-6 mt-4 rounded-lg shadow-md h-fit">
         <h2 class="text-lg font-semibold mb-4">Detail</h2>
         <div class="space-y-2">
             <div class="flex justify-between">
@@ -86,48 +86,71 @@
 <script>
     document.getElementById('rentalForm').addEventListener('submit', function(event) {
         event.preventDefault(); // Mencegah reload halaman
-    
+
         let formData = new FormData(this);
-    
+
         fetch("{{ route('rental.store') }}", {
-            method: "POST",
-            body: formData,
-            headers: {
-                "X-CSRF-TOKEN": document.querySelector('input[name="_token"]').value
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                Swal.fire({
-                    title: "Rental Berhasil!",
-                    html: `
-                        <b>Kode Rental:</b> ${data.rental.code} <br>
-                        <b>Jumlah Hari:</b> ${data.rental.rent_day} Hari <br>
-                        <b>Total Harga:</b> Rp ${parseInt(data.rental.total_price).toLocaleString()} <br>
-                        <b>Tanggal Mulai:</b> ${new Date(data.rental.start_date).toLocaleString()} <br>
-                        <b>Tanggal Selesai:</b> ${new Date(data.rental.end_date).toLocaleString()}
-                    `,
-                    icon: "success",
-                    allowOutsideClick: false,
-                    confirmButtonText: "Kembali",
-                    confirmButtonColor: "#3085d6"
-                }).then(() => {
-                    window.location.href = "{{ route('rental.index') }}"; // Redirect setelah klik tombol
-                });
-            } else {
-                Swal.fire({
-                    title: "Gagal!",
-                    text: data.message,
-                    icon: "error",
-                    allowOutsideClick: false,
-                    confirmButtonText: "OK"
-                });
-            }
-        })
-        .catch(error => console.error("Error:", error));
+                method: "POST",
+                body: formData,
+                headers: {
+                    "X-CSRF-TOKEN": document.querySelector('input[name="_token"]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                            title: '<span class="text-lg font-bold">Detail Rental</span>',
+                            html: `
+        <div class="bg-white rounded-lg shadow-md p-4 text-left">
+            <p class="text-gray-500 text-sm">Kode Rental:</p>
+            <p class="font-semibold">${data.rental.code}</p>
+
+            <div class="border-t my-2"></div>
+
+            <p class="text-gray-500 text-sm">Durasi Sewa:</p>
+            <p class="font-semibold">${data.rental.rent_day} Hari</p>
+
+            <p class="text-gray-500 text-sm">Tanggal Sewa:</p>
+            <p class="font-semibold">${new Date(data.rental.start_date).toLocaleString()}</p>
+
+            <p class="text-gray-500 text-sm">Sewa Berakhir:</p>
+            <p class="font-semibold">${new Date(data.rental.end_date).toLocaleString()}</p>
+
+            <p class="text-gray-500 text-sm">Total Harga:</p>
+            <p class="font-semibold text-lg">Rp ${parseInt(data.rental.total_price).toLocaleString()}</p>
+
+            <div class="mt-3 text-center text-gray-600 text-sm">
+                Mohon tunggu Admin untuk mengecek data Anda
+            </div>
+
+            <button class="bg-indigo-600 text-white w-full mt-4 px-4 py-2 rounded-lg hover:bg-indigo-700">
+                Terimakasih Sudah Menyewa
+            </button>
+        </div>
+    `,
+                            showConfirmButton: false,
+                            customClass: {
+                            popup: 'rounded-lg'
+                            }
+                        })
+                        .then(() => {
+                            window.location.href =
+                                "{{ route('home') }}"; // Redirect setelah klik tombol
+                        });
+                } else {
+                    Swal.fire({
+                        title: "Gagal!",
+                        text: data.message,
+                        icon: "error",
+                        allowOutsideClick: false,
+                        confirmButtonText: "OK"
+                    });
+                }
+            })
+            .catch(error => console.error("Error:", error));
     });
-    </script>
+</script>
 
 
 
@@ -193,7 +216,7 @@
             let minutes = String(endDate.getMinutes()).padStart(2, '0');
 
             // Set nilai end date dengan format datetime-local
-            endDateInput.value = `${year}-${month}-${day}T${hours}:${minutes}`;
+            endDateInput.value = `${year}-${month}-${day} ${hours}:${minutes}`;
         }
 
         // Fungsi gabungan (tidak diubah)

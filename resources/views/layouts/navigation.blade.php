@@ -1,13 +1,23 @@
-<header class="bg-[#605DEC] h-16 text-white sticky top-0 z-10 rounded-b-xl">
+<header class="bg-[#605DEC] h-16 text-white sticky top-0 left-0 w-full z-50 rounded-b-xl shadow-lg">
     <div class="container mx-auto flex justify-between items-center py-4 px-6">
         <div class="text-lg font-bold">Fortune Playstation</div>
 
-        <!-- Desktop Menu -->
-        <nav class="hidden md:flex space-x-6 lg:space-x-24">
-            <a class="hover:underline" href="#">Lokasi</a>
-            <a class="hover:underline" href="#">Tentang Kami</a>
-            <a class="hover:underline" href="{{ route('rental.index') }}">Rental</a>
-        </nav>
+        <!-- Wrapper untuk menu dan user -->
+        <div class="hidden md:flex items-center space-x-6 lg:space-x-12">
+            <nav class="flex space-x-6">
+                <a class="hover:underline" href="#information">Informasi</a>
+                <a class="hover:underline" href="{{ route('rental.index') }}">Rental</a>
+            </nav>
+
+            @if (Auth::check())
+                <div class="flex items-center space-x-2 hover:underline">
+                    <i class="fas fa-user"></i>
+                    <a href="{{ route('account') }}">{{ Auth::user()->name }}</a>
+                </div>
+            @else
+                <a href="{{ route('login') }}" class="hover:underline text-white px-4 py-2 rounded-lg">Masuk</a>
+            @endif
+        </div>
 
         <!-- Burger Menu untuk Mobile -->
         <div class="md:hidden" x-data="{ open: false }">
@@ -20,21 +30,12 @@
             </button>
 
             <!-- Mobile Menu -->
-            <div x-show="open" x-cloak class="absolute top-16 right-4 bg-white shadow-lg rounded-lg w-48">
-                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Lokasi</a>
-                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Kontak</a>
+            <div x-show="open" x-cloak class="absolute top-16 bg-white shadow-lg rounded-lg w-48">
+                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Informasi</a>
+                <a href="{{ route('rental.index') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Rental</a>
                 <a href="{{ route('account') }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Akun</a>
             </div>
         </div>
-
-        @if (Auth::check())
-            <div class="hidden md:flex items-center space-x-2 hover:underline">
-                <i class="fas fa-user"></i>
-                <a href="{{ route('account') }}">{{ Auth::check() ? Auth::user()->name : 'Guest' }}</a>
-            </div>
-        @else
-            <a href="{{ route('login') }}" class="hover:underline text-white px-4 py-2 rounded-lg">Masuk</a>
-        @endif
     </div>
 </header>
 

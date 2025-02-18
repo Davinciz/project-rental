@@ -8,7 +8,8 @@
     <div class="container mx-auto px-6 md:px-10">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-10">
             <!-- TCL 43A8 4K UHD -->
-            <div class="bg-[#B8B7E3] bg-opacity-45 w-[350px] md:w-[400px] mx-auto flex flex-col rounded-lg shadow-md p-5">
+            <div
+                class="bg-[#B8B7E3] bg-opacity-45 w-[350px] md:w-[400px] mx-auto flex flex-col rounded-lg shadow-md p-5">
                 <img alt="TCL 43A8 4K UHD" class="mb-4 mx-auto" height="180" src="{{ asset('image/tcl 1.png') }}"
                     width="180" />
                 <h3 class="text-xl font-semibold">
@@ -29,9 +30,10 @@
                 </p>
             </div>
             <!-- COOCAA 50S6G Pro -->
-            <div class="bg-[#B8B7E3] bg-opacity-45 w-[350px] md:w-[400px] mx-auto flex flex-col rounded-lg shadow-md p-5">
-                <img alt="COOCAA 50S6G Pro" class="mb-4 mx-auto" height="180"
-                    src="{{ asset('image/image 2.png') }}" width="180" />
+            <div
+                class="bg-[#B8B7E3] bg-opacity-45 w-[350px] md:w-[400px] mx-auto flex flex-col rounded-lg shadow-md p-5">
+                <img alt="COOCAA 50S6G Pro" class="mb-4 mx-auto" height="180" src="{{ asset('image/image 2.png') }}"
+                    width="180" />
                 <h3 class="text-xl font-semibold">
                     COOCAA 50S6G Pro
                 </h3>

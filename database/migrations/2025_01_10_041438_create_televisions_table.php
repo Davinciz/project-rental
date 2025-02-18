@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('televisions', function (Blueprint $table) {
             $table->id();
             $table->string('model');
-            $table->string('image');
             $table->bigInteger('price_television');
             $table->string('status_television')->default('available');
             $table->timestamps();

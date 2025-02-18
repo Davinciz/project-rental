@@ -11,6 +11,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/rental', [RentalController::class, 'index'])->name('rental.index');
     Route::post('/rental/store', [RentalController::class, 'store'])->name('rental.store');
     Route::get('/rental/search', [RentalController::class, 'search'])->name('rental.search');
+    Route::post('/rental/cancel/{rental}', [RentalController::class, 'cancel'])->name('rental.cancel');
 });
 
 Route::get('/', [HomeController::class, 'index'])->name('home');

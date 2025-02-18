@@ -3,32 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Models\Console;
-use App\Models\HistoryRental;
+use App\Models\Rental;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Collection;
 
 class AccountController extends Controller
 {
-    public function index()
-    {
-        $historys = HistoryRental::get();
-        $consoles = Console::get();
-        $historys = HistoryRental::where('user_id', auth::id())->get();
+    public function index(Request $request)
+{
+    $querys = Rental::where('user_id', Auth::id());
+
+    if ($request->has('search') && $request->search) {
+        $querys->where('code', 'like', '%' . $request->search . '%')
+              ->orWhereHas('console', function ($consoleQuery) use ($request) {
+                  $consoleQuery->where('name', 'like', '%' . $request->search . '%');
+              });
+    }
     
-        return view('account', compact('historys', 'consoles'));
-    }
+    $querys = $querys->get();
+    $consoles = Console::all();    
 
-    public function search(Request $request)
-    {
-        $query = HistoryRental::query();
-
-        if ($request->has('search')) {
-            $query->where('code', 'like', '%' . $request->search . '%');
-        }
-
-        $historys = $query->paginate(10);
-
-        return view('account', compact('historys'));
-    }
+    return view('account', compact('consoles', 'querys'));
 }
-
+}

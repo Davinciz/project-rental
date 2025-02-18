@@ -2,7 +2,7 @@
     <div class="flex flex-col md:flex-row">
         <aside class="w-full md:w-1/4 bg-white p-4 rounded-lg shadow-md mb-4 md:mb-0">
             <div class="mb-4">
-                <button class="flex items-center w-full p-2 text-left text-gray-700 hover:bg-gray-200 rounded-lg">
+                <button class="flex items-center w-full p-2 text-left text-gray-700 bg-gray-200 rounded-lg">
                     <i class="fas fa-user mr-2">
                     </i>
                     <span>

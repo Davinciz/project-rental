@@ -61,12 +61,12 @@ class RentalController extends Controller
             ]);
 
             // Update status console dan televisi jadi 'not_available'
-            // if ($request->console_id) {
-            //     Console::where('id', $request->console_id)->update(['status' => 'not_available']);
-            // }
-            // if ($request->television_id) {
-            //     Television::where('id', $request->television_id)->update(['status_television' => 'not_available']);
-            // }
+            if ($request->console_id) {
+                Console::where('id', $request->console_id)->update(['status' => 'not_available']);
+            }
+            if ($request->television_id) {
+                Television::where('id', $request->television_id)->update(['status_television' => 'not_available']);
+            }
     
             return response()->json([
                 'success' => true,
@@ -80,7 +80,29 @@ class RentalController extends Controller
             ]);
         }
     }
- 
+
+    public function cancel(Request $request, Rental $rental)
+{
+
+    if ($rental->status !== 'pending') {
+        return response()->json(['success' => false, 'message' => 'Pesanan tidak bisa dibatalkan.']);
+    }
+
+    // Update status rental
+    $rental->update(['status' => 'canceled']);
+
+    // Kembalikan status console dan television jika ada
+    if ($rental->console_id) {
+        Console::where('id', $rental->console_id)->update(['status' => 'available']);
+    }
+
+    if ($rental->television_id) {
+        Television::where('id', $rental->television_id)->update(['status_television' => 'available']);
+    }
+
+    return response()->json(['success' => true, 'message' => 'Pesanan berhasil dibatalkan.']);
+}
+
     
 
 }

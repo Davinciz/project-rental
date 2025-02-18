@@ -31,14 +31,14 @@ class Rental extends Model
         return $this->belongsTo(Console::class);
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function television()
     {
         return $this->belongsTo(Television::class);
-    }
-
-    public function history()
-    {
-        return $this->hasOne(HistoryRental::class, 'rental_id');
     }
 
     /**
@@ -53,20 +53,6 @@ class Rental extends Model
 
             // Pastikan ID pengguna tersedia sebelum melanjutkan
             if ($userId) {
-                HistoryRental::create([
-                    'code' => $rental->code,
-                    'user_id' => Auth::id(), // Mengambil ID pengguna yang sedang login
-                    'rental_id' => $rental->id,
-                    'console_id' => $rental->console_id,
-                    'television_id' => $rental->television_id,
-                    'start_date' => $rental->start_date,
-                    'end_date' => $rental->end_date,
-                    'total_price' => $rental->total_price,
-                    'action' => 'created',
-                    'description' => 'Rental created for rental_id: ' . $rental->id,
-                    'timestamp' => now(),
-                ]);
-
                     // Event ketika rental dibuat
             static::creating(function ($rental) {
                 // Ubah status console menjadi not_available jika ada console_id
@@ -82,7 +68,7 @@ class Rental extends Model
 
             static::creating(function ($rental) {
                 do {
-                    $code = 'ID-' . strtoupper(Str::random(8)); // Format: RNT-XXXXXXXX
+                    $code = 'ID-' . strtoupper(Str::random(5)); // Format: RNT-XXXXXXXX
                 } while (self::where('code', $code)->exists());
     
                 $rental->code = $code;

@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TelevisionResource\Pages;
-use App\Filament\Resources\TelevisionResource\RelationManagers;
 use App\Models\Television;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
@@ -14,8 +13,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 use function Laravel\Prompts\select;
 
@@ -44,8 +41,6 @@ class TelevisionResource extends Resource
                     ->directory('televisions')
                     ->nullable(),
             ]);
-                    
-            
     }
 
     public static function table(Table $table): Table
