@@ -24,7 +24,8 @@
                     <div class="flex flex-col">
                         <p class="font-bold text-lg">{{ $rental->console->name }}</p>
                         <p class="text-gray-600 text-sm">{{ $rental->code }}</p>
-                        <p class="text-gray-600 text-sm">{{ $rental->start_date }}</p>
+                        <p class="text-gray-600 text-sm">{{ \Carbon\Carbon::parse($rental->start_date)->format('d M Y') }}</p>
+
                         <p class="text-gray-800 font-semibold">Rp {{ number_format($rental->total_price, 0, ',', '.') }}
                         </p>
                     </div>
@@ -117,10 +118,10 @@
                     <p class="font-semibold">${history.rent_day} Hari</p>
 
                     <p class="text-gray-500 text-sm">Tanggal Sewa:</p>
-                    <p class="font-semibold">${history.start_date}</p>
+                    <p class="font-semibold">${new Date(history.start_date).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' })}</p>
 
                     <p class="text-gray-500 text-sm">Sewa Berakhir:</p>
-                    <p class="font-semibold">${history.end_date}</p>
+                    <p class="font-semibold">${new Date(history.end_date).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' })}</p>
 
                     <p class="text-gray-500 text-sm">Total Harga:</p>
                     <p class="font-semibold text-lg">Rp ${parseInt(history.total_price).toLocaleString()}</p>

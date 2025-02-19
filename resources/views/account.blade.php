@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <main class="p-4 md:p-8 bg-[#DEDDEB] bg-opacity-50">
+    <main class="p-4 md:p-8 bg-[#DEDDEB] bg-opacity-50 mt-16">
         <div class="text-gray-700 mb-4 ">
             <h1 class="text-2xl font-bold">
                 My Account

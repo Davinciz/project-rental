@@ -36,10 +36,6 @@ class TelevisionResource extends Resource
                         'available' => 'Available',
                         'not_availaible' => 'Not Available',])
                     ->required(),
-                FileUpload::make('image')
-                    ->image()
-                    ->directory('televisions')
-                    ->nullable(),
             ]);
     }
 

@@ -1,4 +1,4 @@
-<header class="bg-[#605DEC] h-16 text-white sticky top-0 left-0 w-full z-50 rounded-b-xl shadow-lg">
+<header class="bg-[#605DEC] h-16 text-white fixed top-0 left-0 w-full z-50 rounded-b-xl shadow-lg">
     <div class="container mx-auto flex justify-between items-center py-4 px-6">
         <div class="text-lg font-bold">Fortune Playstation</div>
 

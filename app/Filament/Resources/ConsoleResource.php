@@ -30,9 +30,6 @@ class ConsoleResource extends Resource
                     ->label('Console Name')
                     ->required(),
 
-                TextInput::make('description')
-                    ->label('Description'),
-
                 TextInput::make('price_console')
                     ->label('Price Per Day')
                     ->numeric()
@@ -44,11 +41,6 @@ class ConsoleResource extends Resource
                         'available' => 'Available',
                         'not_available' => 'Not Available',])
                     ->required(),
-
-                FileUpload::make('image')
-                    ->image()
-                    ->directory('consoles')
-                    ->nullable(),
             ]);
     }
 
@@ -57,7 +49,6 @@ class ConsoleResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')->label('Name'),
-                TextColumn::make('description')->label('Description'),
                 TextColumn::make('price_console')
                     ->label('Price/Day')
                     ->money('IDR', true),

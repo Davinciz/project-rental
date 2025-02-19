@@ -136,6 +136,9 @@ Forms\Components\Hidden::make('user_id')
                 TextColumn::make('user.name')
                 ->label('Customer')
                 ->searchable(),
+                TextColumn::make('user.phone')
+                ->label('Number')
+                ->searchable(),
                 TextColumn::make('console.name'),
                 TextColumn::make('television.model'),
                 TextColumn::make('rent_day'),
@@ -223,7 +226,14 @@ Forms\Components\Hidden::make('user_id')
                         ->success()
                         ->send();
                     }),
-                
+
+                    Tables\Actions\Action::make('contact')
+                    ->label('Contact')
+                    ->color('primary')
+                    ->icon('heroicon-o-phone')
+                    ->visible(fn ($record) => $record->status === 'accepted' && $record->user) // Pastikan user ada
+                    ->url(fn ($record) => 'https://wa.me/62' . ltrim($record->user->phone, '0') . '?text=' . urlencode("Pesanan Anda sudah kami terima. Silahkan datang ke Fortune Playstation."), true), // Menyertakan pesan dan data rental
+                    
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -231,21 +241,6 @@ Forms\Components\Hidden::make('user_id')
                 ]),
             ]);
     }
-
-   /**
-     * Filter data agar customer hanya bisa melihat riwayat miliknya sendiri.
-     */
-    public static function getEloquentQuery(): Builder
-    {
-        $query = parent::getEloquentQuery();
-
-        if (auth::check() && auth::user()->hasRole('customer')) {
-            return $query->where('user_id', auth::id());
-        }
-
-        return $query;
-    }
-    
         private static function updateStatus(Rental $rental, string $status)
     {
         // Update status rental

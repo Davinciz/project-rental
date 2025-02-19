@@ -49,7 +49,7 @@ class UserResource extends Resource
                 ->label('Name'),
                 TextColumn::make('email'),
                 TextColumn::make('phone')
-                ->label('Email'),
+                ->label('Phone'),
                 TextColumn::make('roles.name'),
                 
 

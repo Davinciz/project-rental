@@ -112,10 +112,10 @@
             <p class="font-semibold">${data.rental.rent_day} Hari</p>
 
             <p class="text-gray-500 text-sm">Tanggal Sewa:</p>
-            <p class="font-semibold">${new Date(data.rental.start_date).toLocaleString()}</p>
+            <p class="font-semibold">${new Date(data.rental.start_date).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' })}</p>
 
             <p class="text-gray-500 text-sm">Sewa Berakhir:</p>
-            <p class="font-semibold">${new Date(data.rental.end_date).toLocaleString()}</p>
+            <p class="font-semibold">${new Date(data.rental.end_date).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' })}</p>
 
             <p class="text-gray-500 text-sm">Total Harga:</p>
             <p class="font-semibold text-lg">Rp ${parseInt(data.rental.total_price).toLocaleString()}</p>
@@ -123,10 +123,6 @@
             <div class="mt-3 text-center text-gray-600 text-sm">
                 Mohon tunggu Admin untuk mengecek data Anda
             </div>
-
-            <button class="bg-indigo-600 text-white w-full mt-4 px-4 py-2 rounded-lg hover:bg-indigo-700">
-                Terimakasih Sudah Menyewa
-            </button>
         </div>
     `,
                             showConfirmButton: false,
@@ -135,8 +131,7 @@
                             }
                         })
                         .then(() => {
-                            window.location.href =
-                                "{{ route('home') }}"; // Redirect setelah klik tombol
+                            window.location.href = data.whatsapp_url; // Redirect setelah klik tombol
                         });
                 } else {
                     Swal.fire({
